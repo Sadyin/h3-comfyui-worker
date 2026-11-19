@@ -38,6 +38,8 @@ jobs:
           IMG=ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           TAG=$(date -u +%Y%m%d)-${GITHUB_SHA::7}
           docker build -t $IMG:$TAG -t $IMG:latest .
+          echo "== layer sizes (uncompressed) =="
+          docker history $IMG:$TAG --format '{{.Size}}\t{{printf "%.90s" .CreatedBy}}' | head -14
           docker push $IMG:$TAG
           docker push $IMG:latest
           echo "### Pushed \`$IMG:$TAG\`" >> $GITHUB_STEP_SUMMARY
